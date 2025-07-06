@@ -9,12 +9,7 @@ CLASS zcl_carga_libros_mvrg DEFINITION PUBLIC CREATE PUBLIC
 
     METHODS load_categorias.
     METHODS load_tipo_acc_x_categ.
-
-    METHODS next_id_libro
-      IMPORTING
-        iv_id_libro        TYPE zde_id_libro_mvrg
-      RETURNING
-        VALUE(rv_id_libro) TYPE zde_id_libro_mvrg.
+    METHODS load_libros.
 
   PRIVATE SECTION.
 
@@ -25,17 +20,10 @@ CLASS zcl_carga_libros_mvrg IMPLEMENTATION.
 
   METHOD main.
 
-    DATA:
-      lt_libro    TYPE TABLE OF ztb_libro_mvrg,
-      lv_id_libro TYPE zde_id_libro_mvrg.
-
     load_categorias( ).
     load_tipo_acc_x_categ( ).
+    load_libros( ).
 
-  ENDMETHOD.
-
-  METHOD next_id_libro.
-    rv_id_libro += 1.
   ENDMETHOD.
 
   METHOD load_categorias.
@@ -71,6 +59,33 @@ CLASS zcl_carga_libros_mvrg IMPLEMENTATION.
 
     DELETE FROM ztb_acc_cat_mvrg.
     INSERT ztb_acc_cat_mvrg FROM TABLE @lt_acc_cat.
+
+    COMMIT WORK AND WAIT.
+
+  ENDMETHOD.
+
+  METHOD load_libros.
+
+    DATA:
+      lt_libro TYPE TABLE OF ztb_libro_mvrg.
+
+    lt_libro = VALUE #( FOR i = 1 THEN i + 1 WHILE i <= 10
+      (
+        id_libro = i
+        titulo = |Libro { i }|
+        autor = |Autor { i }|
+        categoria = 'A'
+        editorial = |Editorial { i }|
+        idioma = 'ES'
+        paginas = 100
+        precio = 500
+        moneda = 'MXN'
+        formato = 'F' " Físico
+      )
+    ).
+
+    DELETE FROM ztb_libro_mvrg.
+    INSERT ztb_libro_mvrg FROM TABLE @lt_libro.
 
     COMMIT WORK AND WAIT.
 

@@ -4,6 +4,8 @@
   <asx:values>
    <DEVC>
     <CTEXT>Mario Vladimir Rodriguez Gonzalez</CTEXT>
+    <RESTRICTED>X</RESTRICTED>
+    <MAINPACK>S</MAINPACK>
    </DEVC>
   </asx:values>
  </asx:abap>
