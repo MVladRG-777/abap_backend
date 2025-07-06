@@ -10,6 +10,7 @@ CLASS zcl_carga_libros_mvrg DEFINITION PUBLIC CREATE PUBLIC
     METHODS load_categorias.
     METHODS load_tipo_acc_x_categ.
     METHODS load_libros.
+    METHODS load_clientes.
 
   PRIVATE SECTION.
 
@@ -23,6 +24,7 @@ CLASS zcl_carga_libros_mvrg IMPLEMENTATION.
     load_categorias( ).
     load_tipo_acc_x_categ( ).
     load_libros( ).
+    load_clientes( ).
 
   ENDMETHOD.
 
@@ -86,6 +88,29 @@ CLASS zcl_carga_libros_mvrg IMPLEMENTATION.
 
     DELETE FROM ztb_libro_mvrg.
     INSERT ztb_libro_mvrg FROM TABLE @lt_libro.
+
+    COMMIT WORK AND WAIT.
+
+  ENDMETHOD.
+
+  METHOD load_clientes.
+
+    DATA:
+      lt_cliente TYPE TABLE OF ztb_cliente_mvrg.
+
+    lt_cliente = VALUE #( FOR i = 1 THEN i + 1 WHILE i <= 9
+      (
+        id_cliente = i
+        tipo_acceso = i
+        nombre = |Cliente { i }|
+        apellido1 = |Ape1 Cliente { i }|
+        apellido2 = |Ape2 Cliente { i }|
+        email = |cliente{ i }@corp.com|
+      )
+    ).
+
+    DELETE FROM ztb_cliente_mvrg.
+    INSERT ztb_cliente_mvrg FROM TABLE @lt_cliente.
 
     COMMIT WORK AND WAIT.
 
