@@ -11,6 +11,7 @@ CLASS zcl_carga_libros_mvrg DEFINITION PUBLIC CREATE PUBLIC
     METHODS load_tipo_acc_x_categ.
     METHODS load_libros.
     METHODS load_clientes.
+    METHODS load_libros_x_cliente.
 
   PRIVATE SECTION.
 
@@ -25,6 +26,7 @@ CLASS zcl_carga_libros_mvrg IMPLEMENTATION.
     load_tipo_acc_x_categ( ).
     load_libros( ).
     load_clientes( ).
+    load_libros_x_cliente( ).
 
   ENDMETHOD.
 
@@ -111,6 +113,35 @@ CLASS zcl_carga_libros_mvrg IMPLEMENTATION.
 
     DELETE FROM ztb_cliente_mvrg.
     INSERT ztb_cliente_mvrg FROM TABLE @lt_cliente.
+
+    COMMIT WORK AND WAIT.
+
+  ENDMETHOD.
+
+  METHOD load_libros_x_cliente.
+
+    DATA:
+      lt_cliente_x_libro TYPE TABLE OF ztb_clnt_lb_mvrg.
+
+    lt_cliente_x_libro = VALUE #(
+      ( id_cliente = '1' id_libro = '1' )
+      ( id_cliente = '1' id_libro = '2' )
+      ( id_cliente = '1' id_libro = '3' )
+      ( id_cliente = '2' id_libro = '4' )
+      ( id_cliente = '2' id_libro = '5' )
+      ( id_cliente = '3' id_libro = '1' )
+      ( id_cliente = '3' id_libro = '2' )
+      ( id_cliente = '3' id_libro = '5' )
+      ( id_cliente = '4' id_libro = '2' )
+      ( id_cliente = '4' id_libro = '3' )
+      ( id_cliente = '5' id_libro = '5' )
+      ( id_cliente = '6' id_libro = '6' )
+      ( id_cliente = '6' id_libro = '7' )
+      ( id_cliente = '6' id_libro = '8' )
+    ).
+
+    DELETE FROM ztb_clnt_lb_mvrg.
+    INSERT ztb_clnt_lb_mvrg FROM TABLE @lt_cliente_x_libro.
 
     COMMIT WORK AND WAIT.
 
